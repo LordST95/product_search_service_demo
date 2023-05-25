@@ -37,6 +37,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # djangorestframework
+    'rest_framework',
+    # djangorestframework-simplejwt
+    'rest_framework_simplejwt',
+    # django-filter
+    'django_filters',
+    # django-cors-headers
+    'corsheaders',
+    # django_extensions (shell_plus)
+    'django_extensions',
+    # drf-yasg
+    'drf_yasg',
+    # django-imagekit
+    'imagekit',
+    
+    # My Apps
+    'accounts',
+    'api',
 ]
 
 MIDDLEWARE = [
