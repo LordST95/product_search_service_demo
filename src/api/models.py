@@ -11,7 +11,7 @@ class Product(models.Model):
     )
     category = models.CharField(max_length=15, blank=True, null=True)
     brand = models.CharField(max_length=15, blank=True, null=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2)         # Always use DecimalField for money; Even simple operations (addition, subtraction) are not immune to float rounding issues.
+    price = models.DecimalField(max_digits=10, decimal_places=2)         # Always use DecimalField for money; Even simple operations (addition, subtraction) are not immune to float rounding issues.
     quantity = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(blank=True, null=True)
