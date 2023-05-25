@@ -15,7 +15,7 @@ from api.filters import ProductFilter
 class ProductListView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
     filterset_class = ProductFilter
     
     

@@ -26,3 +26,4 @@ class ProductFilter(filters.FilterSet):
         return queryset
     created_at = filters.CharFilter(field_name="created_at", method=created_at_filter)
     # created_at = filters.DateTimeFilter(field_name='created_at')  # format: 2023-05-25T15:54:39.212653Z
+    rating = filters.NumberFilter(field_name='rating', lookup_expr='in')
