@@ -1,4 +1,3 @@
-from unicodedata import category
 import pytest
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
