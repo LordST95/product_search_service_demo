@@ -4,7 +4,7 @@ from rest_framework.generics import (
     RetrieveAPIView, GenericAPIView
 )
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -14,7 +14,7 @@ from api.serializers import (
 )
 from api.filters import ProductFilter
 from api.tasks import upload_image
-
+from api.permissions import OwnProductPermission
 
 class ProductListView(ListAPIView):
     """
@@ -47,6 +47,12 @@ class ProductListView(ListAPIView):
 class ProductCreateView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class ProductDetailUpdateView(RetrieveUpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated, OwnProductPermission]
 
 
 class ProductCeleryUpdateView(APIView):
