@@ -5,8 +5,10 @@ from rest_framework.generics import (
 )
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
 
-from api.models import Product, Cart
+from api.models import CartItem, Product, Cart
 from api.serializers import (
     ProductCreateSerializer, ProductListSerializer,
     CartListSerializer
@@ -39,29 +41,56 @@ class CartCreateUpdateView(APIView):
     """
     the philosophy of this view is that we should have only one
     unpaid cart at the moment, so there's no need to know the id of that one.
+    
+    this view will update the unpaid cart by two parameters:
+        - add, which contains a products' id willing to be added to cart
+        - remove, which contains a products' id willing to be remoed from cart
+    
+    example:
+        GET /api/v1/orders/add_to_unpaid_cart/?add=1,2&remove=4
     """
 
-    # def post(self, request):
-    #     username = request.data['username']
-    #     password = request.data['password']
-    #     user = authenticate(username=username, password=password)
-    #     if user is not None:
-    #         token, isCreated = Token.objects.get_or_create(user=user)
-    #         return Response(
-    #             status=status.HTTP_201_CREATED,
-    #             data={
-    #                 'token': token.key,
-    #                 'user_id': user.pk,
-    #                 'email': user.email
-    #             }
-    #         )
-    #     else:
-    #         return Response(
-    #             status=status.HTTP_400_BAD_REQUEST,
-    #             data={
-    #                 'khata': "info haii ke dadi qalat bood, ia user vojood nadasht"
-    #             }
-    #         )
+    def get(self, request, *args, **kwargs):
+        cart, created = Cart.objects.get_or_create(
+            buyer=request.user, is_paid=False
+        )
+        add_list = request.GET.get("add", None)
+        remove_list = request.GET.get("remove", None)
+        
+        added_list = []
+        if add_list:
+            for product_id in str(add_list).split(","):
+                try:
+                    product = Product.objects.get(id=int(product_id))
+                except Product.DoesNotExist:
+                    continue
+                if product.quantity > 0:
+                    product.quantity -= 1
+                    product.save()
+                    cart_item = CartItem.objects.create(cart=cart, product=product)
+                    added_list.append(product.id)
+        removed_list = []
+        if remove_list:
+            for product_id in str(remove_list).split(","):
+                try:
+                    product = Product.objects.get(id=int(product_id))
+                except Product.DoesNotExist:
+                    continue
+                if CartItem.objects.filter(cart=cart, product=product).exists():
+                    cart_item = CartItem.objects.filter(cart=cart, product=product)[0].delete()
+                    product.quantity += 1
+                    product.save()
+                    removed_list.append(product.id)
+        
+        
+        return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "added_list": added_list,
+                    "removed_list": removed_list,
+                    "new_cart": CartListSerializer(cart).data,
+                }
+            )
 
 
 # class CartUpdateView(APIView):
