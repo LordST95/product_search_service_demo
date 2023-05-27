@@ -161,4 +161,4 @@ cython_debug/
 CACHE
 product_images
 another_product_images
-another_image_thumbnail
+another_product_images_thumbnail

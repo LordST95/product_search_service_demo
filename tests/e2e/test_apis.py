@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from accounts.models import Member
 from api.models import Product
@@ -193,3 +194,46 @@ def test_products_search_filter_rating(get_user_plus_token, client, rating):
     assert response.status_code == 200
     response_data = response.json()
     assert len(response_data) == rating["expected_result"]
+
+
+# from django.test import override_settings
+# @pytest.mark.skip
+@pytest.mark.django_db
+# @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+def test_uploadImage(get_user_plus_token, client):
+    user, token = get_user_plus_token
+    product = Product.objects.filter(owner=user)[0]
+    #######################################################
+    # TODO, the api worked fine, but I could not run the test with celery :|    ==> for now
+    #####################################
+    # url = reverse('special_image_changer_celery', kwargs={'pk': product.id})
+    # image = SimpleUploadedFile(
+    #     "default_product.png", open(".\..\src\media_server_folder\default_product.png", 'rb').read(),
+    #     content_type="image/jpeg"
+    # )
+    # response = client.post(url, {'image': image}, HTTP_AUTHORIZATION = f'Bearer {token}')
+    # assert response.status_code == 200
+    #####################################
+    # TODO, cuz of above error, I had to run the function, manually
+    
+    # covert png to jpeg
+    from PIL import Image
+    from io import BytesIO
+    im = Image.open(".\..\src\media_server_folder\default_product.png")
+    rgb_im = im.convert('RGB')
+    thumb_io = BytesIO()  # create a BytesIO object
+    rgb_im.save(thumb_io, "JPEG")
+    thumb_io.seek(0)
+    image = SimpleUploadedFile(
+        "default_product.jpg", thumb_io.read(),
+        content_type="image/jpeg"
+    )
+    
+    product.another_image.save(image.name, image)
+    from api.tasks import upload_image
+    upload_image(user.username, product.id)
+    product.refresh_from_db()
+    assert product.another_image.height == 200
+    assert product.another_image.width == 200
+    assert product.another_image_thumbnail.height == 60
+    assert product.another_image_thumbnail.width == 60

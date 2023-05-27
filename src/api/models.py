@@ -30,7 +30,9 @@ class Product(models.Model):
     another_image = models.ImageField(
         upload_to='another_product_images', blank=True, null=True
     )
-    another_image_thumbnail = models.CharField(max_length=150, blank=True, null=True)
+    another_image_thumbnail = models.ImageField(
+        upload_to='another_product_images_thumbnail', blank=True, null=True
+    )
     
     def __str__(self):
         return self.name

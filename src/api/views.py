@@ -64,7 +64,6 @@ class ProductCeleryUpdateView(APIView):
     
     def post(self, request, *args, **kwargs):
         message = None
-        absolute_url = f"{request.scheme}://{request.get_host()}"   # other part is within request.path
         _id = kwargs.get("pk")
         user = request.user
         product = Product.objects.get(id=_id)
@@ -76,7 +75,7 @@ class ProductCeleryUpdateView(APIView):
                 if image and image.content_type == "image/jpeg":
                     # TODO, later we should deny uploading same image for multiple times
                     product.another_image.save(image.name, image)
-                    task_id = upload_image.delay(user.username, _id,  absolute_url, **kwargs)
+                    task_id = upload_image.delay(user.username, _id, **kwargs)
                     message = f"The image processing task start with the id of {task_id}"
             except Exception as ex:
                 print("An exception occurred in celery task: ", ex)
