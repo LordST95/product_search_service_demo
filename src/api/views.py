@@ -11,7 +11,7 @@ from rest_framework import status
 from api.models import CartItem, Product, Cart
 from api.serializers import (
     ProductCreateSerializer, ProductListSerializer,
-    CartListSerializer
+    CartSerializer
 )
 from api.filters import ProductFilter
 
@@ -30,7 +30,7 @@ class ProductCreateView(CreateAPIView):
 
 
 class CartListView(ListAPIView):
-    serializer_class = CartListSerializer
+    serializer_class = CartSerializer
     
     def get_queryset(self):
         queryset = Cart.objects.filter(buyer=self.request.user)
@@ -47,7 +47,7 @@ class CartCreateUpdateView(APIView):
         - remove, which contains a products' id willing to be remoed from cart
     
     example:
-        GET /api/v1/orders/add_to_unpaid_cart/?add=1,2&remove=4
+        GET /api/v1/orders/create_update_unpaid_cart/?add=1,2&remove=4
     """
 
     def get(self, request, *args, **kwargs):
@@ -88,20 +88,33 @@ class CartCreateUpdateView(APIView):
                 data={
                     "added_list": added_list,
                     "removed_list": removed_list,
-                    "new_cart": CartListSerializer(cart).data,
+                    "new_cart": CartSerializer(cart).data,
                 }
             )
 
 
-# class CartUpdateView(APIView):
-#     """
-#     the philosophy of this view is that we should have only one
-#     unpaid cart at the moment, so there's no need to know the id of that one.
-#     """
+class CartMarkAsPaidView(APIView):
 
-
-class CartMarkPaidView(UpdateAPIView):
-    pass
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        _id = kwargs.get("pk")
+        try:
+            cart = Cart.objects.get(id=_id, buyer=user)
+            cart.is_paid = True
+            cart.save()
+            message = "Cart marked as paid"
+            new_cart = CartSerializer(cart).data
+        except Cart.DoesNotExist:
+            message = "It's not possible to mark this cart as paid"
+            new_cart = None
+        
+        return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "message": message,
+                    "new_cart": new_cart,
+                }
+            )
 
 
 class CartDetailView(RetrieveAPIView):

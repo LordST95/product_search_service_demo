@@ -24,7 +24,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CartListSerializer(serializers.ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(source='cart_item_list_RM', many=True)
 
     class Meta:
