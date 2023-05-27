@@ -88,6 +88,34 @@ class ProductCeleryUpdateView(APIView):
             )
 
 
+class ProductThreadUpdateView(APIView):
+    """Using Celery is definitely a better solution"""
+    
+    def post(self, request, *args, **kwargs):
+        message = None
+        _id = kwargs.get("pk")
+        user = request.user
+        product = Product.objects.get(id=_id)
+        if product.owner != user:
+            message = "you can't edit others' products"
+        else:
+            image = request.FILES.get('image', None)
+            if image and image.content_type == "image/jpeg":
+                product.another_image.save(image.name, image)
+                import threading
+                t = threading.Thread(target=upload_image, args=(user.username, _id), kwargs={})
+                t.setDaemon(True)
+                t.start()
+                message = f"The image processing thread start with the id of {threading.get_native_id()}"
+        
+        return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "message": message,
+                }
+            )
+
+
 class CartListView(ListAPIView):
     serializer_class = CartSerializer
     

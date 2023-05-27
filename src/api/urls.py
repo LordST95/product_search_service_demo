@@ -12,6 +12,8 @@ urlpatterns = [
          name="product_detail_update"),
     path('products/<int:pk>/special_image_changer/celery/', views.ProductCeleryUpdateView.as_view(),
          name="special_image_changer_celery"),
+    path('products/<int:pk>/special_image_changer/thread/', views.ProductThreadUpdateView.as_view(),
+         name="special_image_changer_thread"),
     
     # Orders
     path('orders/all/', views.CartListView.as_view(),
