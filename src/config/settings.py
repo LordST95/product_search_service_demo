@@ -161,3 +161,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
 }
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'      # TODO, later, set it based on .env
+CELERY_BROKER_TRANSPORT_OPTIONS = {"max_retries": 1, "interval_start": 0, "interval_step": 0.2, "interval_max": 0.2}

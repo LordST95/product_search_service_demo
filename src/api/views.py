@@ -14,6 +14,7 @@ from api.serializers import (
     CartSerializer
 )
 from api.filters import ProductFilter
+from api.tasks import upload_image
 
 
 class ProductListView(ListAPIView):
@@ -44,9 +45,27 @@ class ProductListView(ListAPIView):
         return queryset
 
 
-class ProductCreateView(CreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductCreateSerializer
+# class ProductCreateView(CreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductCreateSerializer
+
+
+class ProductCeleryUpdateView(APIView):
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            user = None
+            image = None
+            task_id = upload_image.delay(user, image, **kwargs)
+        except Exception as ex:
+            print("An exception occurred in celery task: ", ex)
+        
+        return Response(
+                status=status.HTTP_200_OK,
+                data={
+                    "message": f"The image processing task start with the id of {task_id}",
+                }
+            )
 
 
 class CartListView(ListAPIView):

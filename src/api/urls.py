@@ -6,10 +6,11 @@ from api import views
 
 urlpatterns = [
     # Product
-    path('products/', views.ProductListView.as_view(), name='all_products'),
+    path('products/all/', views.ProductListView.as_view(), name='all_products'),
     # path('products/create/', views.ProductCreateView.as_view()),
     # path('products/<int:pk>/', views.ProductDetailUpdateView.as_view()),
-    # path('products/special_image_changer/<int:pk>/', views.ProductDetailUpdateView.as_view()),
+    path('products/<int:pk>/special_image_changer/celery/', views.ProductCeleryUpdateView.as_view(),
+         name="special_image_changer_celery"),
     
     # Orders
     path('orders/all/', views.CartListView.as_view(),
