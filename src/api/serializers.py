@@ -3,18 +3,19 @@ from rest_framework import serializers
 from api.models import Product, Cart, CartItem
 
 
-class ProductListSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
+    
+    image_thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
         model = Product
         fields = "__all__"
-
-
-class ProductCreateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Product
-        exclude = ["rating"]
+        read_only_fields = ["rating", "owner"]
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        product = Product.objects.create(owner = user, **validated_data)
+        return product
 
 
 class CartItemSerializer(serializers.ModelSerializer):

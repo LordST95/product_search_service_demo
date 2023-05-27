@@ -10,8 +10,7 @@ from rest_framework import status
 
 from api.models import CartItem, Product, Cart
 from api.serializers import (
-    ProductCreateSerializer, ProductListSerializer,
-    CartSerializer
+    ProductSerializer, CartSerializer
 )
 from api.filters import ProductFilter
 from api.tasks import upload_image
@@ -29,7 +28,7 @@ class ProductListView(ListAPIView):
         GET /api/v1/products/?name=&category=&brand=&price__gte=&price__lte=&quantity__gte=2&quantity__lte=&created_at=&rating=&sort=-quantity
     """
     queryset = Product.objects.all()
-    serializer_class = ProductListSerializer
+    serializer_class = ProductSerializer
     # permission_classes = [AllowAny]
     filterset_class = ProductFilter
     # throttle_classes = [AnonRateThrottle] / [UserRateThrottle] TODO, decide about it
@@ -45,9 +44,9 @@ class ProductListView(ListAPIView):
         return queryset
 
 
-# class ProductCreateView(CreateAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductCreateSerializer
+class ProductCreateView(CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
 class ProductCeleryUpdateView(APIView):
@@ -59,7 +58,7 @@ class ProductCeleryUpdateView(APIView):
             task_id = upload_image.delay(user, image, **kwargs)
         except Exception as ex:
             print("An exception occurred in celery task: ", ex)
-        
+
         return Response(
                 status=status.HTTP_200_OK,
                 data={
