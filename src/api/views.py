@@ -17,13 +17,33 @@ from api.filters import ProductFilter
 
 
 class ProductListView(ListAPIView):
+    """
+    search in all products
+    
+    you can search by some fields of Product model + sort parameter
+    
+    sort can be like <field_name> for ascending or -<field_name> for descending order
+    
+    example:
+        GET /api/v1/products/?name=&category=&brand=&price__gte=&price__lte=&quantity__gte=2&quantity__lte=&created_at=&rating=&sort=-quantity
+    """
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     # permission_classes = [AllowAny]
     filterset_class = ProductFilter
     # throttle_classes = [AnonRateThrottle] / [UserRateThrottle] TODO, decide about it
     
-    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        sort = self.request.GET.get("sort", None)
+        fields = [field.name for field in Product._meta.fields]
+        fields.remove("image")
+        sorting_rules = fields + [f"-{field}" for field in fields]
+        if sort in sorting_rules:
+            queryset = queryset.order_by(sort)
+        return queryset
+
+
 class ProductCreateView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer
