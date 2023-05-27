@@ -26,6 +26,11 @@ class Product(models.Model):
         format='JPEG',
         options={'quality': 60}
     )
+    # below fields added just for parallel task (item #12 in project description)
+    another_image = models.ImageField(
+        upload_to='another_product_images', blank=True, null=True
+    )
+    another_image_thumbnail = models.CharField(max_length=150, blank=True, null=True)
     
     def __str__(self):
         return self.name

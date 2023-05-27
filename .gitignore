@@ -160,3 +160,5 @@ cython_debug/
 # IMAGEKIT stuff
 CACHE
 product_images
+another_product_images
+another_image_thumbnail

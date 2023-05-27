@@ -10,7 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
-        read_only_fields = ["rating", "owner"]
+        read_only_fields = ["rating", "owner", "another_image", "another_image_thumbnail"]
     
     def create(self, validated_data):
         user = self.context['request'].user

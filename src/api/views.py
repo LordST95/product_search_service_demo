@@ -1,3 +1,5 @@
+from  datetime import datetime
+
 from rest_framework.generics import (
     CreateAPIView, UpdateAPIView,
     ListAPIView, RetrieveUpdateAPIView,
@@ -7,6 +9,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 from api.models import CartItem, Product, Cart
 from api.serializers import (
@@ -15,6 +19,7 @@ from api.serializers import (
 from api.filters import ProductFilter
 from api.tasks import upload_image
 from api.permissions import OwnProductPermission
+
 
 class ProductListView(ListAPIView):
     """
@@ -57,11 +62,17 @@ class ProductDetailUpdateView(RetrieveUpdateAPIView):
 
 class ProductCeleryUpdateView(APIView):
     
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        absolute_url = f"{request.scheme}://{request.get_host()}"   # other part is within request.path
+        _id = kwargs.get("pk")
+        product = Product.objects.get(id=_id)
         try:
-            user = None
-            image = None
-            task_id = upload_image.delay(user, image, **kwargs)
+            user = request.user.username
+            image = request.FILES.get('image', None)
+            if image and image.content_type == "image/jpeg":
+                # TODO, later we should deny uploading same image for multiple times
+                product.another_image.save(image.name, image)
+                task_id = upload_image.delay(user, _id,  absolute_url, **kwargs)
         except Exception as ex:
             print("An exception occurred in celery task: ", ex)
 
