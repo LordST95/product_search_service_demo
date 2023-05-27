@@ -82,7 +82,7 @@ def test_products_search(get_user_plus_token, client):
     response = client.get(url, HTTP_AUTHORIZATION = f'Bearer {token}')
     assert response.status_code == 200
     response_data = response.json()
-    assert len(response_data) == 10
+    assert len(response_data["results"]) == 10
 
 
 def category_factory():
@@ -101,7 +101,7 @@ def test_products_search_filter_category(get_user_plus_token, client, category):
     response = client.get(url, HTTP_AUTHORIZATION = f'Bearer {token}')
     assert response.status_code == 200
     response_data = response.json()
-    assert len(response_data) == category["expected_result"]
+    assert len(response_data["results"]) == category["expected_result"]
 
 
 def brand_factory():
@@ -120,7 +120,7 @@ def test_products_search_filter_brand(get_user_plus_token, client, brand):
     response = client.get(url, HTTP_AUTHORIZATION = f'Bearer {token}')
     assert response.status_code == 200
     response_data = response.json()
-    assert len(response_data) == brand["expected_result"]
+    assert len(response_data["results"]) == brand["expected_result"]
 
 
 def price_factory():
@@ -146,7 +146,7 @@ def test_products_search_filter_price(get_user_plus_token, client, price):
     response = client.get(url, HTTP_AUTHORIZATION = f'Bearer {token}')
     assert response.status_code == 200
     response_data = response.json()
-    assert len(response_data) == price["expected_result"]
+    assert len(response_data["results"]) == price["expected_result"]
 
 
 def quantity_factory():
@@ -172,7 +172,7 @@ def test_products_search_filter_quantity(get_user_plus_token, client, quantity):
     response = client.get(url, HTTP_AUTHORIZATION = f'Bearer {token}')
     assert response.status_code == 200
     response_data = response.json()
-    assert len(response_data) == quantity["expected_result"]
+    assert len(response_data["results"]) == quantity["expected_result"]
 
 
 def rating_factory():
@@ -193,7 +193,7 @@ def test_products_search_filter_rating(get_user_plus_token, client, rating):
     response = client.get(url, HTTP_AUTHORIZATION = f'Bearer {token}')
     assert response.status_code == 200
     response_data = response.json()
-    assert len(response_data) == rating["expected_result"]
+    assert len(response_data["results"]) == rating["expected_result"]
 
 
 # from django.test import override_settings
