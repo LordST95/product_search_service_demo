@@ -4,7 +4,7 @@ from rest_framework.generics import (
     RetrieveAPIView, GenericAPIView
 )
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from api.models import Product, Cart
 from api.serializers import (
@@ -19,19 +19,16 @@ class ProductListView(ListAPIView):
     serializer_class = ProductListSerializer
     # permission_classes = [AllowAny]
     filterset_class = ProductFilter
-    # throttle_classes = [AnonRateThrottle]
+    # throttle_classes = [AnonRateThrottle] / [UserRateThrottle] TODO, decide about it
     
     
 class ProductCreateView(CreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductCreateSerializer
-    # throttle_classes = [UserRateThrottle]
-    # permission_classes = [IsAuthenticated]    # as its default behavior, there is no need to define it
 
 
 class CartListView(ListAPIView):
     serializer_class = CartListSerializer
-    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         queryset = Cart.objects.filter(buyer=self.request.user)
@@ -43,8 +40,6 @@ class CartCreateUpdateView(APIView):
     the philosophy of this view is that we should have only one
     unpaid cart at the moment, so there's no need to know the id of that one.
     """
-    permission_classes = (AllowAny,)    # TODO, farq e in ba authentication_classes o  chie ...
-    authentication_classes = []
 
     # def post(self, request):
     #     username = request.data['username']
@@ -74,9 +69,6 @@ class CartCreateUpdateView(APIView):
 #     the philosophy of this view is that we should have only one
 #     unpaid cart at the moment, so there's no need to know the id of that one.
 #     """
-#     permission_classes = (AllowAny,)    # TODO, farq e in ba authentication_classes chie ...
-#     authentication_classes = []
-#     throttle_classes = [AnonRateThrottle]
 
 
 class CartMarkPaidView(UpdateAPIView):

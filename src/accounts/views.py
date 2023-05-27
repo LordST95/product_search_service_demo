@@ -1,10 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.generics import RetrieveAPIView
 
 from accounts.serializers import MemberSerializer
 
 
-class UserInfoView(RetrieveAPIView, LoginRequiredMixin):
+class UserInfoView(RetrieveAPIView):
     serializer_class = MemberSerializer
 
     def get_object(self):
