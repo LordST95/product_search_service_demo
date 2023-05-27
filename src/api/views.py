@@ -118,4 +118,9 @@ class CartMarkAsPaidView(APIView):
 
 
 class CartDetailView(RetrieveAPIView):
-    pass
+    serializer_class = CartSerializer
+    
+    def get_queryset(self):
+        queryset = Cart.objects.filter(buyer=self.request.user)
+        return queryset
+

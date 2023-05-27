@@ -18,7 +18,7 @@ urlpatterns = [
          name="create_update_unpaid_cart"),
     path('orders/mark_cart_as_paid/<int:pk>/', views.CartMarkAsPaidView.as_view(),
          name="mark_cart_as_paid"),
-    # path('orders/detail/<int:pk>/', views.CartDetailView.as_view(),
-    #      name="cart_detail"),
+    path('orders/detail/<int:pk>/', views.CartDetailView.as_view(),
+         name="cart_detail"),
 
 ]
