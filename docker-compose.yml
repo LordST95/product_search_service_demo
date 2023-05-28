@@ -1,0 +1,52 @@
+version: "3.8"
+
+volumes:
+    mysql-data: {}
+
+services:
+
+  db:
+    container_name: mysql_db
+    image: mysql:8.0.33
+    restart: always
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: product_search_db
+      MYSQL_ROOT_PASSWORD: fake_pass
+    ports:
+        - "3306:3306"
+
+  redis:
+    container_name: product_search_redis
+    image: redis:7.0.11
+    command: redis-server
+    # ports:
+    #   - "6379:6379"
+
+  celeryworker:
+    container_name: product_search_celery
+    image: product_search_celery
+    restart: always
+    build:
+      context: ./
+      dockerfile: docker/celery/Dockerfile
+    volumes:
+      - ./src:/app
+    depends_on:
+      - redis
+
+  demo_api:
+    container_name: product_search_api
+    image: product_search_api
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/backend/Dockerfile
+    volumes:
+      - ./src:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - celeryworker

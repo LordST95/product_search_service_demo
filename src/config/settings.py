@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-uax3do3sxnpl0frr(@*nbmz^)t*lh%kbo#t@$#s(23bo1f^d@7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -82,9 +82,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'product_search_db',
+        'USER': 'root',
+        'PASSWORD': 'fake_pass',
+        'HOST': 'db',
+        'PORT': '3306',
+        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
     }
 }
 
@@ -162,7 +171,8 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
 }
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'      # TODO, later, set it based on .env
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'      # TODO, later, set it based on .env
+CELERY_BROKER_URL = 'redis://redis:6379/1'      # TODO, later, set it based on .env
 CELERY_BROKER_TRANSPORT_OPTIONS = {"max_retries": 1, "interval_start": 0, "interval_step": 0.2, "interval_max": 0.2}
 
 MEDIA_ROOT = BASE_DIR.joinpath("media_server_folder")
