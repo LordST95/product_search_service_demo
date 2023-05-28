@@ -29,7 +29,7 @@ services:
     image: product_search_celery
     restart: always
     build:
-      context: ./
+      context: .
       dockerfile: docker/celery/Dockerfile
     volumes:
       - ./src:/app
@@ -41,7 +41,7 @@ services:
     image: product_search_api
     restart: always
     build:
-      context: ./
+      context: .
       dockerfile: ./docker/backend/Dockerfile
     volumes:
       - ./src:/app
