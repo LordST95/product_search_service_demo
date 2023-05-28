@@ -2,22 +2,36 @@ version: "3.8"
 
 volumes:
     mysql-data: {}
+    postgres-data: {}
 
 services:
 
+  # db:
+  #   container_name: mysql_db
+  #   image: mysql:8.0.33
+  #   restart: always
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #   environment:
+  #     MYSQL_DATABASE: product_search_db
+  #     # MYSQL_USER: root
+  #     # MYSQL_PASSWORD: fake_pass
+  #     MYSQL_ROOT_PASSWORD: fake_pass
+  #   ports:
+  #       - "3306:3306"
+    
   db:
-    container_name: mysql_db
-    image: mysql:8.0.33
+    container_name: postgresDB
+    image: postgres:14.0
     restart: always
     volumes:
-      - mysql-data:/var/lib/mysql
+      - postgres-data:/var/lib/postgresql/data
     environment:
-      MYSQL_DATABASE: product_search_db
-      # MYSQL_USER: root
-      # MYSQL_PASSWORD: fake_pass
-      MYSQL_ROOT_PASSWORD: fake_pass
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-        - "3306:3306"
+        - "5433:5432"
 
   redis:
     container_name: product_search_redis
