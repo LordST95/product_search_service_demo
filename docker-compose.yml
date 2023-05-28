@@ -13,6 +13,8 @@ services:
       - mysql-data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: product_search_db
+      # MYSQL_USER: root
+      # MYSQL_PASSWORD: fake_pass
       MYSQL_ROOT_PASSWORD: fake_pass
     ports:
         - "3306:3306"
@@ -43,6 +45,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
+    # command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./src:/app
     ports:
