@@ -40,6 +40,7 @@ pilkit==2.0
 Pillow==9.5.0
 pluggy==1.0.0
 prompt-toolkit==3.0.38
+psycopg2-binary==2.9.6
 pycparser==2.21
 PyJWT==2.7.0
 pytest==7.3.1
