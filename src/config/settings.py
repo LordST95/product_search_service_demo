@@ -167,3 +167,14 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {"max_retries": 1, "interval_start": 0, "inter
 
 MEDIA_ROOT = BASE_DIR.joinpath("media_server_folder")
 MEDIA_URL = '/media/'
+
+
+
+
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = 'sina@gmail.com'
+EMAIL_HOST_PASSWORD = 'fakePass2023$'
+EMAIL_PORT = 2525
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'   # we can didn't write it
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"

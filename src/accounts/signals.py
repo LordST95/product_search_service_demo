@@ -19,6 +19,7 @@ def send_email(sender, instance=None, created=False, **kwargs):
         # # .get() forced it to wait
         # result_output = result.get()
         # method2
-        send_welcome_email.delay(instance.username)
+        if instance.email:
+            send_welcome_email.delay(instance.username, instance.email)
         
     return "sth"
