@@ -106,7 +106,7 @@ class ProductThreadUpdateView(APIView):
                 t = threading.Thread(target=upload_image, args=(user.username, _id), kwargs={})
                 t.setDaemon(True)
                 t.start()
-                message = f"The image processing thread start with the id of {threading.get_native_id()}"
+                message = f"The image processing thread start with the id of {t.ident}"
         
         return Response(
                 status=status.HTTP_200_OK,
