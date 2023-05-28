@@ -10,7 +10,7 @@ services:
     image: mysql:8.0.33
     restart: always
     volumes:
-      - mysql:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: product_search_db
       MYSQL_ROOT_PASSWORD: fake_pass
