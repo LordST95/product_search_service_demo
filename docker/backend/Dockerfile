@@ -2,9 +2,11 @@ FROM python:3.10.0
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
+RUN ls -alh
 RUN echo "-------------"
 RUN ls .
 RUN echo "-------------"
+RUN contents="$(ls -1 /app)" && echo $contents
 
 COPY ./starting_script.sh /usr/local/bin/starting_script.sh
 RUN chmod +x /usr/local/bin/starting_script.sh
