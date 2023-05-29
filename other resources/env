@@ -1,0 +1,17 @@
+# docker-compose
+DATABASE_NAME=product_search_db
+MYSQL_ROOT_PASSWORD=fake_pass
+# django stuff
+SECRET_KEY='django-insecure-uax3do3sxnpl0frr(@*nbmz^)t*lh%kbo#t@$#s(23bo1f^d@7'
+DEBUG=True
+ALLOWED_HOSTS='["*"]'
+DATABASE_USER='root'
+DATABASE_HOST='db'
+POSTGRES_DATABASE_URL=postgres://postgres:postgres@db_backup:5432/postgres
+MAIN_ADMIN_F_NAME='test'
+MAIN_ADMIN_L_NAME='tester'
+MAIN_ADMIN_USER='test'
+MAIN_ADMIN_PASS='test'
+MAIN_ADMIN_EMAIL='sina.tamjidy@gmail.com'
+# CORS_ORIGIN_ALLOW_ALL=True
+CELERY_BROKER_URL='redis://redis:6379/1'
