@@ -1,21 +1,32 @@
 from pathlib import Path
 from datetime import timedelta
+import json
 import sys
+
+import environ
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False),
+    WHICH_DB=(str, 'MYSQL'),
+)
+environ.Env.read_env(env_file=BASE_DIR.parent.joinpath(".env")) # reading .env file
+
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/ will do ;)
+SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: keep the secret key used in production secret! ==> sure, I will do ;)
-SECRET_KEY = 'django-insecure-uax3do3sxnpl0frr(@*nbmz^)t*lh%kbo#t@$#s(23bo1f^d@7'
+# SECURITY WARNING: keep the secret key used in production secret! ==> sure, I
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = json.loads(env('ALLOWED_HOSTS'))
 
 
 # Application definition
@@ -82,29 +93,31 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    # # 'default': {
-    # #     'ENGINE': 'django.db.backends.sqlite3',
-    # #     'NAME': BASE_DIR / 'db.sqlite3',
-    # # }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'product_search_db',
-        'USER': 'root',
-        'PASSWORD': 'fake_pass',
-        'HOST': 'db',
-        'PORT': '3306',
-        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
-    }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'postgres',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'postgres',
-    #     'HOST': 'db',
-    #     'PORT': '5432',
-    # }
-}
+DATABASES = None
+match env('WHICH_DB'):
+    case "MYSQL":
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': env('DATABASE_NAME'),
+                'USER': env('DATABASE_USER'),
+                'PASSWORD':  env.str('MYSQL_ROOT_PASSWORD'),
+                'HOST': env('DATABASE_HOST'),
+                'PORT': '3306',
+                'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
+            }
+        }
+    case "POSTGRES":
+        DATABASES = {
+            'default': env.db("POSTGRES_DATABASE_URL")
+        }
+    case "SQLITE":
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 
 # Password validation
@@ -151,11 +164,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.Member'
 
-MAIN_ADMIN_F_NAME = "Test"
-MAIN_ADMIN_L_NAME = "Tester"
-MAIN_ADMIN_USER = "test"
-MAIN_ADMIN_PASS = "test"
-MAIN_ADMIN_EMAIL = "sina.tamjidy@gmail.com"     # not real one :)
+MAIN_ADMIN_F_NAME = env('MAIN_ADMIN_F_NAME')
+MAIN_ADMIN_L_NAME = env('MAIN_ADMIN_L_NAME')
+MAIN_ADMIN_USER = env('MAIN_ADMIN_USER')
+MAIN_ADMIN_PASS = env('MAIN_ADMIN_PASS')
+MAIN_ADMIN_EMAIL = env('MAIN_ADMIN_EMAIL')
 
 AUTH_PASSWORD_VALIDATORS = []
 
@@ -180,8 +193,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
 }
 
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'      # TODO, later, set it based on .env
-CELERY_BROKER_URL = 'redis://redis:6379/1'      # TODO, later, set it based on .env
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_BROKER_TRANSPORT_OPTIONS = {"max_retries": 1, "interval_start": 0, "interval_step": 0.2, "interval_max": 0.2}
 
 
@@ -198,4 +210,3 @@ if "pytest" in sys.modules:
     EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-

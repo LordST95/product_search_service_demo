@@ -14,26 +14,26 @@ services:
       - mysql-data:/var/lib/mysql
       - ./mycustom.cnf:/etc/mysql/conf.d/custom.cnf
     environment:
-      MYSQL_DATABASE: product_search_db
-      MYSQL_ROOT_PASSWORD: fake_pass
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_TCP_PORT: 3306
     ports:
       - "3306:3306"
     expose:
       - 3306
     
-  # db:
-  #   container_name: postgresDB
-  #   image: postgres:14.0
-  #   restart: always
-  #   volumes:
-  #     - postgres-data:/var/lib/postgresql/data
-  #   environment:
-  #     POSTGRES_DB: postgres
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
-  #   ports:
-  #       - "5432:5432"
+  db_backup:
+    container_name: postgresDB
+    image: postgres:14.0
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+        - "5432:5432"
 
   redis:
     container_name: product_search_redis
