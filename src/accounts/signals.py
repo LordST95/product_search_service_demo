@@ -14,5 +14,5 @@ def send_email(sender, instance=None, created=False, **kwargs):
         # sending_time = datetime.now() + timedelta(seconds=5, days=1)
         sending_time = datetime.now() + timedelta(seconds=10)
         if instance.email:
-            send_welcome_email.apply_async(args=(instance.username,), eta=sending_time)
+            send_welcome_email.apply_async(args=(instance.username, instance.email), eta=sending_time)
     return "sth"
