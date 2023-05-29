@@ -71,6 +71,21 @@ services:
       - celeryworker
       - mailhog
 
+  demo_api_easy_testing:
+    container_name: testing
+    image: testing
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/testing/Dockerfile
+    volumes:
+      - ./src:/project/src
+      - ./tests:/project/tests
+    depends_on:
+      - db
+      - celeryworker
+      - mailhog
+
   mailhog:
     image: mailhog/mailhog
     container_name: mailhog
