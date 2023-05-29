@@ -151,9 +151,8 @@ def test_products_search_filter_rating(get_user_plus_token, client, rating):
     response_data = response.json()
     assert len(response_data["results"]) == rating["expected_result"]
 
-
 # from django.test import override_settings
-@pytest.mark.skip # TODO, the api worked fine, but I could not run the test with celery :|    ==> for now
+@pytest.mark.xfail(reason="the api worked fine, but I could not run the test with celery :|    ==> for noww")
 @pytest.mark.django_db
 # @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
 def test_uploadImage_celery(get_user_plus_token, client, get_image_for_upload):
@@ -174,7 +173,7 @@ def test_uploadImage_celery(get_user_plus_token, client, get_image_for_upload):
     assert product.another_image_thumbnail.width == 60
 
 
-@pytest.mark.skip # TODO, the api worked fine, but I could not run the test with thread :|    ==> for now
+@pytest.mark.xfail(reason="the api worked fine, but I could not run the test with thread :|    ==> for now")
 @pytest.mark.django_db
 def test_uploadImage_thread(get_user_plus_token, client, get_image_for_upload):
     user, token = get_user_plus_token

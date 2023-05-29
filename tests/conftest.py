@@ -1,4 +1,5 @@
 from io import BytesIO
+import pathlib
 
 import pytest
 from django.contrib.auth.hashers import make_password
@@ -57,7 +58,9 @@ def create_ten_products(get_user_plus_pass):
 @pytest.fixture
 def get_image_for_upload():
     # covert png to jpeg
-    im = Image.open(".\..\src\media_server_folder\default_product.png")
+    current_dir = pathlib.Path().absolute()
+    path = current_dir.parent.joinpath("src", "media_server_folder", "default_product.png")
+    im = Image.open(path)
     rgb_im = im.convert('RGB')
     thumb_io = BytesIO()  # create a BytesIO object
     rgb_im.save(thumb_io, "JPEG")
