@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -183,16 +184,18 @@ SIMPLE_JWT = {
 CELERY_BROKER_URL = 'redis://redis:6379/1'      # TODO, later, set it based on .env
 CELERY_BROKER_TRANSPORT_OPTIONS = {"max_retries": 1, "interval_start": 0, "interval_step": 0.2, "interval_max": 0.2}
 
+
 MEDIA_ROOT = BASE_DIR.joinpath("media_server_folder")
 MEDIA_URL = '/media/'
-
-
 
 
 EMAIL_HOST = 'mailhog'
 EMAIL_HOST_USER = 'sina@gmail.com'
 EMAIL_HOST_PASSWORD = 'fakePass2023$'
 EMAIL_PORT = 1025
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'   # we can didn't write it
-# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-# EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+if "pytest" in sys.modules:
+    # we don't want to send email for our tests
+    EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
