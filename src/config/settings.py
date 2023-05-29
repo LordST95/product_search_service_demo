@@ -189,10 +189,10 @@ MEDIA_URL = '/media/'
 
 
 
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'mailhog'
 EMAIL_HOST_USER = 'sina@gmail.com'
 EMAIL_HOST_PASSWORD = 'fakePass2023$'
-EMAIL_PORT = 2525
+EMAIL_PORT = 1025
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'   # we can didn't write it
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"

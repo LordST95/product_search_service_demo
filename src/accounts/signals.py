@@ -9,7 +9,6 @@ from accounts.tasks import send_welcome_email
 
 @receiver(post_save, sender=Member, dispatch_uid="send_email_for_new_users")
 def send_email(sender, instance=None, created=False, **kwargs):
-    # TODO, apply_async doesn't work on my windows, check if it is ok in linux based server
     if created:
         # sending_time = datetime.now() + timedelta(seconds=5, days=1)
         sending_time = datetime.now() + timedelta(seconds=10)
