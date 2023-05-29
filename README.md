@@ -12,3 +12,21 @@ pytest e2e/test_apis.py::test_uploadImage
 <!-- https://www.acorel.nl/en/2022/03/fake-smtp-servers-for-testing/ -->
 java -jar C:\Users\Sina\Desktop\project\fakeSMTP-2.0.jar -p 2525
 
+
+
+
+docker container prune
+docker image prune
+docker network prune
+docker volume prune
+
+docker exec -it <containerID> bash
+
+docker logs --tail="20" 87ead406dc8b
+
+docker ps -a		docker stop <>			docker rm <>
+docker image ls -a	docker image rm <>
+docker volume ls    docker volume rm <>
+
+docker compose up -d --force-recreate
+docker network inspect <netID>

@@ -6,32 +6,34 @@ volumes:
 
 services:
 
-  # db:
-  #   container_name: mysql_db
-  #   image: mysql:8.0.33
-  #   restart: always
-  #   volumes:
-  #     - mysql-data:/var/lib/mysql
-  #   environment:
-  #     MYSQL_DATABASE: product_search_db
-  #     # MYSQL_USER: root
-  #     # MYSQL_PASSWORD: fake_pass
-  #     MYSQL_ROOT_PASSWORD: fake_pass
-  #   ports:
-  #       - "3306:3306"
-    
   db:
-    container_name: postgresDB
-    image: postgres:14.0
+    container_name: mysql_db
+    image: mysql:8.0.25
     restart: always
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-data:/var/lib/mysql
+      - ./mycustom.cnf:/etc/mysql/conf.d/custom.cnf
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      MYSQL_DATABASE: product_search_db
+      MYSQL_ROOT_PASSWORD: fake_pass
+      MYSQL_TCP_PORT: 3306
     ports:
-        - "5432:5432"
+      - "3306:3306"
+    expose:
+      - 3306
+    
+  # db:
+  #   container_name: postgresDB
+  #   image: postgres:14.0
+  #   restart: always
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_DB: postgres
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #   ports:
+  #       - "5432:5432"
 
   redis:
     container_name: product_search_redis
