@@ -24,7 +24,6 @@ class ProductFilter(filters.FilterSet):
         """
         the format of 'created_at' should be sth like: ?created_at=2023-05-25 instead of 2023-05-25T15:54:39.212653Z
         """
-        # year, month, day = str(value).split("-")
         queryset = queryset.filter(created_at__date=value)
         return queryset
     created_at = filters.CharFilter(field_name="created_at", method=created_at_filter)

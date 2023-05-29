@@ -1,10 +1,7 @@
-import os
-import pathlib
 from io import BytesIO
 
 from celery import shared_task
 from celery.utils.log import get_logger
-from django.conf import settings
 from PIL import Image
 
 from api.models import Product

@@ -1,16 +1,13 @@
 from  datetime import datetime
 
 from rest_framework.generics import (
-    CreateAPIView, UpdateAPIView,
-    ListAPIView, RetrieveUpdateAPIView,
-    RetrieveAPIView, GenericAPIView
+    CreateAPIView, ListAPIView, RetrieveUpdateAPIView,
+    RetrieveAPIView
 )
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 
 from api.models import CartItem, Product, Cart
 from api.serializers import (

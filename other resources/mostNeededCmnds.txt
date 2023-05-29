@@ -26,4 +26,5 @@ docker image ls -a	docker image rm <>
 docker volume ls    docker volume rm <>
 
 docker compose up -d --force-recreate
+docker compose up -d --build
 docker network inspect <netID>
